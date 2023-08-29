@@ -11,6 +11,7 @@
 		1E885EE62A9E025400E69D74 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E885EE52A9E025400E69D74 /* ContentView.swift */; };
 		1E885EE82A9E025600E69D74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E885EE72A9E025600E69D74 /* Assets.xcassets */; };
 		1E885EEB2A9E025600E69D74 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E885EEA2A9E025600E69D74 /* Preview Assets.xcassets */; };
+		1E885EF22A9E210700E69D74 /* MainScreenCustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E885EF12A9E210700E69D74 /* MainScreenCustomization.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +20,7 @@
 		1E885EE52A9E025400E69D74 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		1E885EE72A9E025600E69D74 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1E885EEA2A9E025600E69D74 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		1E885EF12A9E210700E69D74 /* MainScreenCustomization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenCustomization.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +55,7 @@
 			children = (
 				1E885EE32A9E025400E69D74 /* bitemapApp.swift */,
 				1E885EE52A9E025400E69D74 /* ContentView.swift */,
+				1E885EF12A9E210700E69D74 /* MainScreenCustomization.swift */,
 				1E885EE72A9E025600E69D74 /* Assets.xcassets */,
 				1E885EE92A9E025600E69D74 /* Preview Content */,
 			);
@@ -139,6 +142,7 @@
 			files = (
 				1E885EE62A9E025400E69D74 /* ContentView.swift in Sources */,
 				1E885EE42A9E025400E69D74 /* bitemapApp.swift in Sources */,
+				1E885EF22A9E210700E69D74 /* MainScreenCustomization.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
