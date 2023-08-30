@@ -14,6 +14,12 @@ extension View {
             .frame(width: width * 0.8, height: 50)
             .foregroundColor(Color.black)
             .border(Color.black, width: 0.5)
- //           .padding(30)
+    }
+    
+    func mealsFood(width: CGFloat) -> some View {
+        self
+            .frame(width: width * 0.3, height: 50)
+            .foregroundColor(Color.black)
+            .border(Color.black, width: 0.5)
     }
 }

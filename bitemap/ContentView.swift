@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var selectedDate = Date.now
+    @State private var selectedDate = Date.now // for tracking which day's info is being handled
 
     var body: some View {
         NavigationView {
@@ -16,6 +16,7 @@ struct ContentView: View {
                 VStack {
                     Text("bitemap")
                         .font(.title.bold())
+                        .scaleEffect(1.5)
                         .padding(geometry.size.height * 0.12)
 
                     
@@ -24,15 +25,35 @@ struct ContentView: View {
                             .font(.footnote)
                         Text("0")
                             .font(.title.bold())
+                            .scaleEffect(1.5)
+                            .padding(5)
                         Text("calories eaten")
                             .font(.footnote)
                             .padding(.bottom, geometry.size.height * 0.03)
                     }
                     
-                    DatePicker("", selection: $selectedDate, displayedComponents: .date)
-                        .scaleEffect(1.5)
-                        .frame(width: geometry.size.width / 3)
-                        .frame(width: geometry.size.width)
+                    // date selection
+                    HStack {
+                        Button {
+                            selectedDate = Calendar.current.date(byAdding: .day, value: -1, to: selectedDate)!
+                        } label: {
+                            Image(systemName: "lessthan")
+                                .foregroundColor(Color.black)
+                        }
+                        
+                        DatePicker("", selection: $selectedDate, displayedComponents: .date)
+                            .scaleEffect(1.2)
+                        
+                        Button {
+                            selectedDate = Calendar.current.date(byAdding: .day, value: 1, to: selectedDate)!
+                        } label: {
+                            Image(systemName: "greaterthan")
+                                .foregroundColor(Color.black)
+                        }
+                        .padding(.leading, 8)
+                    }
+                    .frame(width: geometry.size.width / 3)
+                    .frame(width: geometry.size.width)
                     
                     Spacer()
                     
@@ -43,18 +64,18 @@ struct ContentView: View {
                             HStack {
                                 Text("Breakfast")
                                     .font(.headline)
-                                    .padding(.leading, 40)
+                                    .padding(.leading, 50)
                                 Spacer()
                                 VStack {
                                     Spacer()
                                     Text("0 kcal")
                                         .font(.footnote)
-                                        .padding([.trailing, .bottom], 10)
+                                        .padding([.trailing, .bottom], 12)
                                 }
                             }
                             .mealType(width: geometry.size.width)
                         }
-                        .padding(20)
+                        .padding(10)
                         
                         NavigationLink {
                             
@@ -62,18 +83,18 @@ struct ContentView: View {
                             HStack {
                                 Text("Lunch")
                                     .font(.headline)
-                                    .padding(.leading, 40)
+                                    .padding(.leading, 50)
                                 Spacer()
                                 VStack {
                                     Spacer()
                                     Text("0 kcal")
                                         .font(.footnote)
-                                        .padding([.trailing, .bottom], 10)
+                                        .padding([.trailing, .bottom], 12)
                                 }
                             }
                             .mealType(width: geometry.size.width)
                         }
-                        .padding(20)
+                        .padding(10)
                         
                         NavigationLink {
                             
@@ -81,18 +102,38 @@ struct ContentView: View {
                             HStack {
                                 Text("Dinner")
                                     .font(.headline)
-                                    .padding(.leading, 40)
+                                    .padding(.leading, 50)
                                 Spacer()
                                 VStack {
                                     Spacer()
                                     Text("0 kcal")
                                         .font(.footnote)
-                                        .padding([.trailing, .bottom], 10)
+                                        .padding([.trailing, .bottom], 12)
                                 }
                             }
                             .mealType(width: geometry.size.width)
                         }
-                        .padding(20)
+                        .padding(10)
+                        
+                        HStack {
+                            NavigationLink {
+                                
+                            } label: {
+                                    Text("Meals")
+                                        .font(.headline)
+                                .mealsFood(width: geometry.size.width)
+                            }
+                            .padding(.top, 5)
+                            
+                            NavigationLink {
+                                
+                            } label: {
+                                    Text("Food")
+                                        .font(.headline)
+                                .mealsFood(width: geometry.size.width)
+                            }
+                            .padding(.top, 5)
+                        }
                     }
                     Spacer()
                     
