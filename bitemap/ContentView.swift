@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(\.managedObjectContext) var moc
     @State private var selectedDate = Date.now // for tracking which day's info is being handled
 
     var body: some View {
@@ -126,7 +127,7 @@ struct ContentView: View {
                             .padding(.top, 5)
                             
                             NavigationLink {
-                                
+                                FoodView(moc: moc)
                             } label: {
                                     Text("Food")
                                         .font(.headline)
