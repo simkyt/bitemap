@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E3258872AA8702100516811 /* FoodViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3258862AA8702100516811 /* FoodViewModel.swift */; };
+		1E53F8642A9F43120023D783 /* FoodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53F8632A9F43120023D783 /* FoodView.swift */; };
+		1E53F8692AA0D4F00023D783 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53F8682AA0D4F00023D783 /* DataController.swift */; };
+		1E53F86C2AA0D5B20023D783 /* bitemap.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1E53F86A2AA0D5B20023D783 /* bitemap.xcdatamodeld */; };
+		1E53F86E2AA0EFF90023D783 /* FoodAddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53F86D2AA0EFF90023D783 /* FoodAddView.swift */; };
+		1E53F88A2AA785C30023D783 /* FoodAddViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53F8892AA785C30023D783 /* FoodAddViewModel.swift */; };
 		1E885EE42A9E025400E69D74 /* bitemapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E885EE32A9E025400E69D74 /* bitemapApp.swift */; };
 		1E885EE62A9E025400E69D74 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E885EE52A9E025400E69D74 /* ContentView.swift */; };
 		1E885EE82A9E025600E69D74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E885EE72A9E025600E69D74 /* Assets.xcassets */; };
@@ -15,6 +21,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1E3258862AA8702100516811 /* FoodViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodViewModel.swift; sourceTree = "<group>"; };
+		1E53F8632A9F43120023D783 /* FoodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodView.swift; sourceTree = "<group>"; };
+		1E53F8682AA0D4F00023D783 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		1E53F86B2AA0D5B20023D783 /* Food.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Food.xcdatamodel; sourceTree = "<group>"; };
+		1E53F86D2AA0EFF90023D783 /* FoodAddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodAddView.swift; sourceTree = "<group>"; };
+		1E53F8892AA785C30023D783 /* FoodAddViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodAddViewModel.swift; sourceTree = "<group>"; };
 		1E885EE02A9E025400E69D74 /* bitemap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bitemap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E885EE32A9E025400E69D74 /* bitemapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bitemapApp.swift; sourceTree = "<group>"; };
 		1E885EE52A9E025400E69D74 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -56,8 +68,14 @@
 				1E885EE32A9E025400E69D74 /* bitemapApp.swift */,
 				1E885EE52A9E025400E69D74 /* ContentView.swift */,
 				1E885EF12A9E210700E69D74 /* MainScreenCustomization.swift */,
+				1E53F8892AA785C30023D783 /* FoodAddViewModel.swift */,
+				1E53F86D2AA0EFF90023D783 /* FoodAddView.swift */,
+				1E53F8632A9F43120023D783 /* FoodView.swift */,
+				1E53F8682AA0D4F00023D783 /* DataController.swift */,
+				1E53F86A2AA0D5B20023D783 /* bitemap.xcdatamodeld */,
 				1E885EE72A9E025600E69D74 /* Assets.xcassets */,
 				1E885EE92A9E025600E69D74 /* Preview Content */,
+				1E3258862AA8702100516811 /* FoodViewModel.swift */,
 			);
 			path = bitemap;
 			sourceTree = "<group>";
@@ -140,8 +158,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E53F86C2AA0D5B20023D783 /* bitemap.xcdatamodeld in Sources */,
+				1E53F8642A9F43120023D783 /* FoodView.swift in Sources */,
+				1E53F8692AA0D4F00023D783 /* DataController.swift in Sources */,
 				1E885EE62A9E025400E69D74 /* ContentView.swift in Sources */,
+				1E53F86E2AA0EFF90023D783 /* FoodAddView.swift in Sources */,
+				1E3258872AA8702100516811 /* FoodViewModel.swift in Sources */,
 				1E885EE42A9E025400E69D74 /* bitemapApp.swift in Sources */,
+				1E53F88A2AA785C30023D783 /* FoodAddViewModel.swift in Sources */,
 				1E885EF22A9E210700E69D74 /* MainScreenCustomization.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -343,6 +367,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		1E53F86A2AA0D5B20023D783 /* bitemap.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				1E53F86B2AA0D5B20023D783 /* Food.xcdatamodel */,
+			);
+			currentVersion = 1E53F86B2AA0D5B20023D783 /* Food.xcdatamodel */;
+			path = bitemap.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 1E885ED82A9E025400E69D74 /* Project object */;
 }
