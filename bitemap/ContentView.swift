@@ -9,7 +9,12 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) var moc
-    @State private var selectedDate = Date.now // for tracking which day's info is being handled
+    @State var selectedDate: Date = {
+        let now = Date()
+        var calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month, .day], from: now)
+        return calendar.date(from: components) ?? now
+    }()
 
     var body: some View {
         NavigationView {
@@ -19,7 +24,6 @@ struct ContentView: View {
                         .font(.title.bold())
                         .scaleEffect(1.5)
                         .padding(geometry.size.height * 0.12)
-
                     
                     VStack {
                         Text("in total")
@@ -60,7 +64,7 @@ struct ContentView: View {
                     
                     VStack {
                         NavigationLink {
-                            
+                            RepastView(type: "breakfast", date: selectedDate, moc: moc)
                         } label: {
                             HStack {
                                 Text("Breakfast")
@@ -79,7 +83,7 @@ struct ContentView: View {
                         .padding(10)
                         
                         NavigationLink {
-                            
+                            RepastView(type: "lunch", date: selectedDate, moc: moc)
                         } label: {
                             HStack {
                                 Text("Lunch")
@@ -98,7 +102,7 @@ struct ContentView: View {
                         .padding(10)
                         
                         NavigationLink {
-                            
+                            RepastView(type: "Dinner", date: selectedDate, moc: moc)
                         } label: {
                             HStack {
                                 Text("Dinner")
