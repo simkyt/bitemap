@@ -31,12 +31,12 @@ struct FoodView: View {
             List() {
                 ForEach(foods) { food in
                     VStack(alignment: .leading) {
-                        Text(food.name ?? "Unknown")
+                        Text(food.wrappedName)
                             .font(.headline)
                             .padding(.bottom, 0.5)
                         Text("\(formatter.string(from: food.kcal as NSNumber) ?? "0") kcal")
                             .font(.subheadline)
-                        Text("1 \(food.serving ?? "Unknown") (\(formatter.string(from: food.size as NSNumber) ?? "0") \(food.perserving ?? "Unknown")) ")
+                        Text("1 \(food.wrappedServing) (\(formatter.string(from: food.size as NSNumber) ?? "0") \(food.wrappedPerServing)) ")
                             .font(.subheadline)
                     }
                 }

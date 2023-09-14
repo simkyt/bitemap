@@ -23,3 +23,17 @@ extension View {
             .border(Color.black, width: 0.5)
     }
 }
+
+extension NumberFormatter {
+    static var customDecimalFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 0
+        return formatter
+    }
+
+    func string(from value: Double?) -> String {
+        return self.string(from: NSNumber(value: value ?? 0)) ?? "0"
+    }
+}
