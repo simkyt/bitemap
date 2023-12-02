@@ -42,6 +42,8 @@ extension Food {
         serving ?? "Unknown serving type"
     }
     @NSManaged public var size: Double
+    @NSManaged public var wasDeleted: Bool
+    @NSManaged public var isFromDatabase: Bool
     @NSManaged public var foodentry: NSSet?
 //    public var repastArray: [Repast] {
 //        let entries = foodentry as? Set<FoodEntry> ?? []

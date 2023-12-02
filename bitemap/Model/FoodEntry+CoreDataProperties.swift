@@ -22,6 +22,10 @@ extension FoodEntry {
     @NSManaged public var kcal: Double
     @NSManaged public var protein: Double
     @NSManaged public var servingsize: Double
+    @NSManaged public var servingunit: String?
+    public var wrappedServingUnit: String {
+        servingunit ?? "Unknown serving unit"
+    }
     @NSManaged public var food: Food?
     @NSManaged public var repast: Repast?
 

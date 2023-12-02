@@ -13,7 +13,7 @@ struct bitemapApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainView(moc: dataController.container.viewContext)
                 .environment(\.managedObjectContext, dataController.container.viewContext)
         }
     }

@@ -1,0 +1,77 @@
+[
+  {
+    "id": 1,
+    "name": "Vegetables",
+    "description": "This category encompasses all vegetables"
+  },
+  {
+    "id": 2,
+    "name": "Pork",
+    "description": "This category encompasses all pork"
+  },
+  {
+    "id": 3,
+    "name": "Bread & Bakery",
+    "description": "This subcategory encompasses bread and bakery products"
+  },
+  {
+    "id": 4,
+    "name": "Dairy & Eggs",
+    "description": "This subcategory encompasses dairy and eggs"
+  },
+  {
+    "id": 5,
+    "name": "Drinks",
+    "description": "This subcategory encompasses drinks"
+  },
+  {
+    "id": 6,
+    "name": "Beef",
+    "description": "This subcategory encompasses beef"
+  },
+  {
+    "id": 7,
+    "name": "Fish & Shellfish",
+    "description": "This subcategory encompasses all fish and shellfish"
+  },
+  {
+    "id": 8,
+    "name": "Food cupboard",
+    "description": "This subcategory encompasses everything that goes in the food cupboard"
+  },
+  {
+    "id": 9,
+    "name": "Fruit & Nuts",
+    "description": "This subcategory encompasses fruits and nuts"
+  },
+  {
+    "id": 10,
+    "name": "Lamb",
+    "description": "This subcategory encompasses lamb"
+  },
+  {
+    "id": 11,
+    "name": "Meat",
+    "description": "This subcategory encompasses various meat"
+  },
+  {
+    "id": 12,
+    "name": "Ready meals",
+    "description": "This subcategory encompasses ready meals"
+  },
+  {
+    "id": 13,
+    "name": "Sauces & Soups",
+    "description": "This subcategory encompasses sauces and soups"
+  },
+  {
+    "id": 14,
+    "name": "Snacks, Candy & Dessert",
+    "description": "This subcategory encompasses snacks, candy and dessert"
+  },
+  {
+    "id": 15,
+    "name": "Veal",
+    "description": "This subcategory encompasses veal"
+  }
+]

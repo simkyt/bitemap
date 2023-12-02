@@ -1,0 +1,51 @@
+//
+//  RepastLinkView.swift
+//  bitemap
+//
+//  Created by Simonas Kytra on 28/11/2023.
+//
+
+import SwiftUI
+import CoreData
+
+struct RepastLinkView: View {
+    let repastType: String
+    let calorieCount: Double
+    let date: Date
+    private var moc: NSManagedObjectContext
+    var bodyWidth: CGFloat
+
+    init(moc: NSManagedObjectContext, repastType: String, calorieCount: Double, date: Date, bodyWidth: CGFloat) {
+        self.moc = moc
+        self.repastType = repastType
+        self.calorieCount = calorieCount
+        self.date = date
+        self.bodyWidth = bodyWidth
+    }
+    
+    var body: some View {
+        NavigationLink {
+            RepastView(type: repastType, date: date, moc: moc)
+        } label: {
+            HStack {
+                Image(repastType)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 50, height: 45)
+                    .padding(.leading, 20)
+                Text(repastType)
+                    .font(.headline)
+                    .padding(.leading, 15)
+                Spacer()
+                VStack {
+                    Spacer()
+                    Text(String(format: "%.0f kcal", calorieCount))
+                        .font(.footnote)
+                        .padding([.trailing, .bottom], 12)
+                }
+            }
+            .barStyle(width: bodyWidth)
+        }
+        .padding([.leading, .trailing], 10)
+    }
+}

@@ -19,7 +19,7 @@ class FoodViewModel: ObservableObject {
     func removeFood(from foods: FetchedResults<Food>, at offsets: IndexSet) {
         for index in offsets {
             let food = foods[index]
-            moc.delete(food)
+            food.wasDeleted = true
         }
 
         do {

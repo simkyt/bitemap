@@ -1,25 +1,27 @@
 //
-//  FoodAddView.swift
+//  EditCustomFoodView.swift
 //  bitemap
 //
-//  Created by Simonas Kytra on 2023-08-31.
+//  Created by Simonas Kytra on 30/11/2023.
 //
 
 import SwiftUI
 import CoreData
 
-struct FoodAddView: View {
-    @Environment(\.managedObjectContext) var moc
-    @StateObject private var viewModel: FoodAddViewModel
+struct EditCustomFoodView: View {
+    var moc: NSManagedObjectContext
+    @StateObject private var viewModel: EditCustomFoodViewModel
     @Environment(\.dismiss) var dismiss
     @State private var showingError = false
     @State private var isPressed = false
+    @State private var isMenuOpen = false
     
     let servingTypes = ["Small serving", "Standard serving", "Large serving"]
     let servingContents = ["g", "ml"]
     
-    init(moc: NSManagedObjectContext) {
-        _viewModel = StateObject(wrappedValue: FoodAddViewModel(moc: moc))
+    init(moc: NSManagedObjectContext, food: Food) {
+        self.moc = moc
+        _viewModel = StateObject(wrappedValue: EditCustomFoodViewModel(moc: moc, food: food))
     }
     
     var body: some View {
@@ -33,6 +35,7 @@ struct FoodAddView: View {
                             TextField("required", text: $viewModel.name)
                                 .multilineTextAlignment(.trailing)
                         }
+                        .formRowStyle()
                         
                         HStack {
                             Text("Brand")
@@ -40,7 +43,34 @@ struct FoodAddView: View {
                             TextField("optional", text: $viewModel.brand)
                                 .multilineTextAlignment(.trailing)
                         }
-                        // category needs to be done
+                        .formRowStyle()
+                        
+                        HStack {
+                            Text("Category")
+                                .frame(width: 105, alignment: .leading)
+                            Menu(viewModel.category.isEmpty ? "required" : viewModel.category) {
+                                ForEach(viewModel.categories, id: \.id) { category in
+                                    Menu(category.name) {
+                                        ForEach(viewModel.subcategories, id: \.id) { subcategory in
+                                            if (subcategory.categoryID == category.id) {
+                                                Button(subcategory.name) {
+                                                    viewModel.category = subcategory.name
+                                                    viewModel.categoryID = category.id
+                                                    viewModel.subcategoryID = subcategory.id
+                                                    isMenuOpen = false
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            .foregroundStyle(Color.secondary)
+                            .onDisappear {
+                                isMenuOpen = false
+                            }
+                        }
+                        .formRowStyle()
                     } header: {
                         Text("Basic information")
                     }
@@ -52,6 +82,7 @@ struct FoodAddView: View {
                             }
                             .pickerStyle(WheelPickerStyle())
                         }
+                        .formRowStyle()
                         
                         Picker("Serving content", selection: $viewModel.perserving) {
                             ForEach(0..<servingContents.count) {
@@ -59,6 +90,7 @@ struct FoodAddView: View {
                             }
                             .pickerStyle(WheelPickerStyle())
                         }
+                        .formRowStyle()
                         
                         HStack {
                             Text("1 serving has")
@@ -69,6 +101,7 @@ struct FoodAddView: View {
                                 .border(Color.gray, width: 1)
                             Text(servingContents[viewModel.perserving])
                         }
+                        .formRowStyle()
                     } header: {
                         Text("Serving information")
                     }
@@ -81,6 +114,7 @@ struct FoodAddView: View {
                                 .multilineTextAlignment(.trailing)
                                 .keyboardType(.decimalPad)
                         }
+                        .formRowStyle()
                         
                         HStack {
                             Text("Protein / 100 \(servingContents[viewModel.perserving])")
@@ -89,6 +123,7 @@ struct FoodAddView: View {
                                 .multilineTextAlignment(.trailing)
                                 .keyboardType(.decimalPad)
                         }
+                        .formRowStyle()
                         
                         HStack {
                             Text("Carbs / 100 \(servingContents[viewModel.perserving])")
@@ -97,6 +132,7 @@ struct FoodAddView: View {
                                 .multilineTextAlignment(.trailing)
                                 .keyboardType(.decimalPad)
                         }
+                        .formRowStyle()
                         
                         HStack {
                             Text("Fat / 100 \(servingContents[viewModel.perserving])")
@@ -105,44 +141,52 @@ struct FoodAddView: View {
                                 .multilineTextAlignment(.trailing)
                                 .keyboardType(.decimalPad)
                         }
-                        
+                        .formRowStyle()
                     } header: {
                         Text("Nutritional information")
                     }
+                    
+                    Section {
+                        HStack {
+                            Spacer()
+                            Button(action: {
+                                if viewModel.isValid() {
+                                    viewModel.updateFood()
+                                    dismiss()
+                                } else {
+                                    showingError = true
+                                }
+                            }) {
+                                Text("Update")
+                                    .font(.title2.bold())
+                                    .foregroundColor(.white)
+                                    .frame(width: 150)
+                                    .padding()
+                                    .background(Color.green)
+                                    .cornerRadius(8)
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                            Spacer()
+                        }
+                        .listRowBackground(Color.clear)
+                    }
                 }
                 .scrollContentBackground(.hidden)
-                
-                Button(action: {
-                    if viewModel.isValid() {
-                        viewModel.addFood()
-                        dismiss()
-                    } else {
-                        showingError = true
-                    }
-                }) {
-                    Text("Add")
-                        .font(.title2.bold())
-                        .foregroundColor(.white)
-                        .frame(width: 150)
-                        .padding()
-                        .background(Color.green)
-                        .cornerRadius(8)
-                }
- //               .buttonStyle(PlainButtonStyle())
- //               .listRowBackground(Color.clear)
-                
-                Spacer()
-                Spacer()
             }
-            .navigationTitle("Create food")
+            .blur(radius: isMenuOpen ? 3 : 0)
+            .navigationTitle("Edit food")
             .navigationBarTitleDisplayMode(.inline)
+            .background(
+                Color.cream
+                    .edgesIgnoringSafeArea(.all)
+            )
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         dismiss()
                     } label: {
                         Image(systemName: "xmark")
-                            .foregroundColor(Color.black)
+                            .foregroundStyle(Color.black)
                     }
                 }
             }
@@ -154,11 +198,6 @@ struct FoodAddView: View {
                 Text("Please fill out the required information")
             }
         }
+        .onAppear(perform: UIApplication.shared.addTapGestureRecognizer) // this is for keyboard hiding when pressing somewhere on the view
     }
 }
-
-//struct FoodAddView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        FoodAddView()
-//    }
-//}

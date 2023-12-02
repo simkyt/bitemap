@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22G74" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22222" systemVersion="23A344" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Food" representedClassName=".Food" syncable="YES">
         <attribute name="brand" optional="YES" attributeType="String"/>
         <attribute name="carbs" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="category" optional="YES" attributeType="String"/>
         <attribute name="fat" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isFromDatabase" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="kcal" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String"/>
         <attribute name="perserving" attributeType="String"/>
         <attribute name="protein" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="serving" attributeType="String"/>
         <attribute name="size" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="wasDeleted" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <relationship name="foodentry" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="FoodEntry" inverseName="food" inverseEntity="FoodEntry"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
@@ -26,6 +28,7 @@
         <attribute name="kcal" attributeType="Double" usesScalarValueType="YES"/>
         <attribute name="protein" attributeType="Double" usesScalarValueType="YES"/>
         <attribute name="servingsize" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="servingunit" optional="YES" attributeType="String"/>
         <relationship name="food" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Food" inverseName="foodentry" inverseEntity="Food"/>
         <relationship name="repast" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Repast" inverseName="foodentry" inverseEntity="Repast"/>
         <uniquenessConstraints>
