@@ -1,27 +1,29 @@
 //
-//  EditCustomFoodView.swift
+//  FoodAddView.swift
 //  bitemap
 //
-//  Created by Simonas Kytra on 30/11/2023.
+//  Created by Simonas Kytra on 2023-08-31.
 //
 
 import SwiftUI
 import CoreData
 
-struct EditCustomFoodView: View {
-    var moc: NSManagedObjectContext
-    @StateObject private var viewModel: EditCustomFoodViewModel
+struct FoodDetailView: View {
+    private var moc: NSManagedObjectContext
+    @StateObject private var viewModel: FoodDetailViewModel
     @Environment(\.dismiss) var dismiss
+    
     @State private var showingError = false
     @State private var isPressed = false
-    @State private var isMenuOpen = false
+    @FocusState private var isFocused: Bool
     
     let servingTypes = ["Small serving", "Standard serving", "Large serving"]
     let servingContents = ["g", "ml"]
     
-    init(moc: NSManagedObjectContext, food: Food) {
+    init(moc: NSManagedObjectContext, food: Food? = nil) {
+        let mode = food != nil ? FoodDetailViewModel.Mode.edit(food!) : .add
         self.moc = moc
-        _viewModel = StateObject(wrappedValue: EditCustomFoodViewModel(moc: moc, food: food))
+        _viewModel = StateObject(wrappedValue: FoodDetailViewModel(moc: moc, mode: mode))
     }
     
     var body: some View {
@@ -48,7 +50,7 @@ struct EditCustomFoodView: View {
                         HStack {
                             Text("Category")
                                 .frame(width: 105, alignment: .leading)
-                            Menu(viewModel.category.isEmpty ? "required" : viewModel.category) {
+                            Menu {
                                 ForEach(viewModel.categories, id: \.id) { category in
                                     Menu(category.name) {
                                         ForEach(viewModel.subcategories, id: \.id) { subcategory in
@@ -57,18 +59,21 @@ struct EditCustomFoodView: View {
                                                     viewModel.category = subcategory.name
                                                     viewModel.categoryID = category.id
                                                     viewModel.subcategoryID = subcategory.id
-                                                    isMenuOpen = false
                                                 }
                                             }
                                         }
                                     }
                                 }
+                            } label: {
+                                HStack {
+                                    Text(viewModel.category.isEmpty ? "required" : viewModel.category)
+                                        .foregroundColor(.secondary)
+                                    
+                                    Image(systemName: "chevron.right")
+                                        .foregroundColor(.secondary)
+                                }
                             }
                             .frame(maxWidth: .infinity, alignment: .trailing)
-                            .foregroundStyle(Color.secondary)
-                            .onDisappear {
-                                isMenuOpen = false
-                            }
                         }
                         .formRowStyle()
                     } header: {
@@ -77,18 +82,16 @@ struct EditCustomFoodView: View {
                     
                     Section {
                         Picker("Serving type", selection: $viewModel.serving) {
-                            ForEach(0..<servingTypes.count) {
-                                Text(self.servingTypes[$0])
+                            ForEach(servingTypes.indices, id: \.self) { index in
+                                Text(self.servingTypes[index])
                             }
-                            .pickerStyle(WheelPickerStyle())
                         }
                         .formRowStyle()
                         
                         Picker("Serving content", selection: $viewModel.perserving) {
-                            ForEach(0..<servingContents.count) {
-                                Text(self.servingContents[$0])
+                            ForEach(servingContents.indices, id: \.self) { index in
+                                Text(self.servingContents[index])
                             }
-                            .pickerStyle(WheelPickerStyle())
                         }
                         .formRowStyle()
                         
@@ -97,7 +100,7 @@ struct EditCustomFoodView: View {
                             Spacer()
                             TextField(" ", text: $viewModel.size)
                                 .frame(width: 60, height: 35)
-                                .keyboardType(.decimalPad)
+                                .keyboardType(.numberPad)
                                 .border(Color.gray, width: 1)
                             Text(servingContents[viewModel.perserving])
                         }
@@ -112,7 +115,7 @@ struct EditCustomFoodView: View {
                                 .frame(width: 100, alignment: .leading)
                             TextField("required", text: $viewModel.kcal)
                                 .multilineTextAlignment(.trailing)
-                                .keyboardType(.decimalPad)
+                                .keyboardType(.numberPad)
                         }
                         .formRowStyle()
                         
@@ -151,13 +154,13 @@ struct EditCustomFoodView: View {
                             Spacer()
                             Button(action: {
                                 if viewModel.isValid() {
-                                    viewModel.updateFood()
+                                    viewModel.saveFood()
                                     dismiss()
                                 } else {
                                     showingError = true
                                 }
                             }) {
-                                Text("Update")
+                                Text(viewModel.buttonTitle)
                                     .font(.title2.bold())
                                     .foregroundColor(.white)
                                     .frame(width: 150)
@@ -173,8 +176,7 @@ struct EditCustomFoodView: View {
                 }
                 .scrollContentBackground(.hidden)
             }
-            .blur(radius: isMenuOpen ? 3 : 0)
-            .navigationTitle("Edit food")
+            .navigationTitle("Create food")
             .navigationBarTitleDisplayMode(.inline)
             .background(
                 Color.cream
@@ -201,3 +203,9 @@ struct EditCustomFoodView: View {
         .onAppear(perform: UIApplication.shared.addTapGestureRecognizer) // this is for keyboard hiding when pressing somewhere on the view
     }
 }
+
+//struct FoodAddView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        FoodAddView()
+//    }
+//}

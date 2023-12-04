@@ -30,7 +30,22 @@
         <attribute name="servingsize" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="servingunit" optional="YES" attributeType="String"/>
         <relationship name="food" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Food" inverseName="foodentry" inverseEntity="Food"/>
+        <relationship name="quicktrack" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="QuickTrack" inverseName="foodentry" inverseEntity="QuickTrack"/>
         <relationship name="repast" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Repast" inverseName="foodentry" inverseEntity="Repast"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="QuickTrack" representedClassName=".QuickTrack" syncable="YES">
+        <attribute name="carbs" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="fat" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="kcal" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="protein" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="foodentry" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FoodEntry" inverseName="quicktrack" inverseEntity="FoodEntry"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="id"/>

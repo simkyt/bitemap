@@ -31,11 +31,10 @@ struct RepastLinkView: View {
                 Image(repastType)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 50, height: 45)
+                    .frame(width: 40, height: 35)
                     .padding(.leading, 20)
                 Text(repastType)
-                    .font(.headline)
-                    .padding(.leading, 15)
+                    .padding(.leading, 10)
                 Spacer()
                 VStack {
                     Spacer()

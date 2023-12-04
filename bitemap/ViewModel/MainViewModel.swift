@@ -18,6 +18,7 @@ class MainViewModel: ObservableObject {
     @Published var breakfastCalories: Double = 0
     @Published var lunchCalories: Double = 0
     @Published var dinnerCalories: Double = 0
+    @Published var snacksCalories: Double = 0
 
     private var moc: NSManagedObjectContext
 
@@ -27,7 +28,7 @@ class MainViewModel: ObservableObject {
     }
     
     func calculateTotalCalories(for date: Date) {
-        let types = ["breakfast", "lunch", "dinner"]
+        let types = ["Breakfast", "Lunch", "Dinner", "Snacks"]
         var totalCalories: Double = 0
         var totalCarbs: Double = 0
         var totalProtein: Double = 0
@@ -55,9 +56,10 @@ class MainViewModel: ObservableObject {
         self.totalProtein = totalProtein
         self.totalFat = totalFat
         
-        self.breakfastCalories = mealCalories["breakfast"] ?? 0
-        self.lunchCalories = mealCalories["lunch"] ?? 0
-        self.dinnerCalories = mealCalories["dinner"] ?? 0
+        self.breakfastCalories = mealCalories["Breakfast"] ?? 0
+        self.lunchCalories = mealCalories["Lunch"] ?? 0
+        self.dinnerCalories = mealCalories["Dinner"] ?? 0
+        self.snacksCalories = mealCalories["Snacks"] ?? 0
     }
 }
 

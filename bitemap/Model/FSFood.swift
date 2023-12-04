@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+// for FatSecret database
 struct FS: Codable {
     let foods: FSFoods?
 }
@@ -24,7 +25,7 @@ struct FSFoods: Codable {
     }
 }
 
-struct FSFood: Codable, StandardFood {
+struct FSFood: Codable, DBFood {
     let brand: String?
     let foodDescription, id, name: String
 //    let foodType: FoodType
@@ -40,9 +41,18 @@ struct FSFood: Codable, StandardFood {
     }
 
     var size: Double {
-        guard foodDescription.contains("Per 100g") else { return 0 }
-        return 100.0
+        let regex = try! NSRegularExpression(pattern: "Per (\\d+)g")
+        let descriptionRange = NSRange(foodDescription.startIndex..<foodDescription.endIndex, in: foodDescription)
+        
+        if let match = regex.firstMatch(in: foodDescription, options: [], range: descriptionRange),
+           let range = Range(match.range(at: 1), in: foodDescription) {
+            let numberString = String(foodDescription[range])
+            return Double(numberString) ?? 0
+        }
+        
+        return 0
     }
+
 
     var perserving: String {
         "g"

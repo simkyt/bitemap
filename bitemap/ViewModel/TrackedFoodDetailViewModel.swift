@@ -17,6 +17,15 @@ class TrackedFoodDetailViewModel: ObservableObject {
     @Published var temporaryCarbs: Double = 0
     @Published var temporaryProtein: Double = 0
     @Published var temporaryFat: Double = 0
+    @Published var trackingSaved = false
+    
+    var isServingSizeValid: Bool {
+        let formattedServingSizeText = servingSizeText.replacingOccurrences(of: ",", with: ".")
+        guard let _ = Double(formattedServingSizeText) else {
+            return false
+        }
+        return true
+    }
     
     let formatter = NumberFormatter()
 
@@ -61,7 +70,10 @@ class TrackedFoodDetailViewModel: ObservableObject {
     
     func saveChanges() {
         if let number = formatter.number(from: servingSizeText) {
-            let newServingSize = number.doubleValue
+            var newServingSize = number.doubleValue
+            if newServingSize == 0 {
+                newServingSize = foodEntry.servingsize
+            }
             
             foodEntry.repast!.kcal -= foodEntry.kcal
             foodEntry.repast!.carbs -= foodEntry.carbs
@@ -80,7 +92,19 @@ class TrackedFoodDetailViewModel: ObservableObject {
             foodEntry.repast!.fat += foodEntry.fat
             foodEntry.repast!.protein += foodEntry.protein
             
+            trackingSaved = true
             try? moc.save()
         }
+    }
+    
+    func deleteFoodEntry() {
+        foodEntry.repast!.kcal -= foodEntry.kcal
+        foodEntry.repast!.carbs -= foodEntry.carbs
+        foodEntry.repast!.fat -= foodEntry.fat
+        foodEntry.repast!.protein -= foodEntry.protein
+        foodEntry.repast!.removeFromFoodentry(foodEntry)
+        
+        moc.delete(foodEntry)
+        try? moc.save()
     }
 }

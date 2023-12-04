@@ -9,23 +9,34 @@ import Foundation
 import SwiftUI
 import CoreData
 
+enum TrackingType {
+    case update
+    case track
+}
+
 struct TrackedFoodDetailView: View {
     var moc: NSManagedObjectContext
     @StateObject private var viewModel: TrackedFoodDetailViewModel
-    
     @Environment(\.presentationMode) var presentationMode
+    
+    @Binding var search: String
+    @Binding var searchEnabled: Bool
+    
+    var trackingType: TrackingType
     @FocusState private var isFocused: Bool
     let maxLength = 4
     
-    init(moc: NSManagedObjectContext, foodEntry: FoodEntry) {
+    init(moc: NSManagedObjectContext, foodEntry: FoodEntry, trackingType: TrackingType, search: Binding<String>, searchEnabled: Binding<Bool>) {
         self.moc = moc
         _viewModel = StateObject(wrappedValue: TrackedFoodDetailViewModel(moc: moc, foodEntry: foodEntry))
+        self.trackingType = trackingType
+        self._search = search
+        self._searchEnabled = searchEnabled
     }
     
     var body: some View {
         GeometryReader { geometry in
-            VStack {
-                
+            VStack(spacing: 0) {
                 ZStack {
                     Color.softerWhite
                         .edgesIgnoringSafeArea(.top)
@@ -70,6 +81,10 @@ struct TrackedFoodDetailView: View {
                         .foregroundStyle(Color.black)
                     }
                 }
+                
+                Rectangle()
+                    .frame(height: 0.5)
+                    .foregroundColor(.gray)
                 
                 Spacer()
                 
@@ -124,25 +139,44 @@ struct TrackedFoodDetailView: View {
                 
                 Spacer()
                 Spacer()
-                Spacer()
-                Spacer()
                 
                 HStack {
                     Spacer()
-                    Button(action: {
-                        viewModel.saveChanges()
-                        presentationMode.wrappedValue.dismiss()
-                    }) {
-                        Text("Update")
-                            .font(.title2.bold())
-                            .foregroundColor(.white)
-                            .frame(width: 150)
-                            .padding()
-                            .background(Color.green)
-                            .cornerRadius(8)
+                    if trackingType == .update {
+                        Button(action: {
+                            viewModel.saveChanges()
+                            presentationMode.wrappedValue.dismiss()
+                        }) {
+                            Text("Update")
+                                .font(.title2.bold())
+                                .foregroundColor(.white)
+                                .frame(width: 150)
+                                .padding()
+                                .background(Color.green)
+                                .cornerRadius(8)
+                        }
+                        .disabled(!viewModel.isServingSizeValid)
+                        .buttonStyle(PlainButtonStyle())
+                        Spacer()
+                    } else {
+                        Button(action: {
+                            viewModel.saveChanges()
+                            search = ""
+                            searchEnabled = false
+                            presentationMode.wrappedValue.dismiss()
+                        }) {
+                            Text("Track")
+                                .font(.title2.bold())
+                                .foregroundColor(.white)
+                                .frame(width: 150)
+                                .padding()
+                                .background(Color.green)
+                                .cornerRadius(8)
+                        }
+                        .disabled(!viewModel.isServingSizeValid)
+                        .buttonStyle(PlainButtonStyle())
+                        Spacer()
                     }
-                    .buttonStyle(PlainButtonStyle())
-                    Spacer()
                 }
                 .listRowBackground(Color.clear)
                 
@@ -150,16 +184,17 @@ struct TrackedFoodDetailView: View {
             }
             .navigationTitle(viewModel.foodEntry.food!.wrappedName)
             .background(
-                Color.gray.opacity(0.05)
-                    .scaledToFill()
-                    .edgesIgnoringSafeArea(.all)
-            )
-            .background(
                 Color.cream
                     .edgesIgnoringSafeArea(.all)
             )
             .onTapGesture {
                 self.hideKeyboard()
+            }
+            .onDisappear {
+                if trackingType == .track && viewModel.trackingSaved == false {
+                    print(viewModel.trackingSaved)
+                    viewModel.deleteFoodEntry()
+                }
             }
         }
     }

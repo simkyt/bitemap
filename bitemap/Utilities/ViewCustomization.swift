@@ -16,11 +16,7 @@ extension AnyTransition {
     }
 }
 
-extension Color {
-    public static var lightBlue: Color {
-        return Color(red: 0.8274509803921568, green: 0.9176470588235294, blue: 0.9490196078431372).opacity(0.3)
-    }
-    
+extension Color {    
     public static var cream: Color {
         return Color(red: 0.9490196078431372, green: 0.9294117647058824, blue: 0.9098039215686274)
     }
@@ -28,7 +24,41 @@ extension Color {
     public static var softerWhite: Color {
         return Color(red: 0.9882352941176471, green: 0.984313725490196, blue: 0.9725490196078431)
     }
+}
 
+extension Date {
+    func customFormatted() -> String {
+        let calendar = Calendar.current
+        let dateFormatter = DateFormatter()
+        
+        dateFormatter.dateFormat = "dd MMM"
+        dateFormatter.locale = Locale(identifier: "en_US")
+
+        if calendar.isDateInToday(self) {
+            return "Today, \(dateFormatter.string(from: self))"
+        } else if calendar.isDateInTomorrow(self) {
+            return "Tomorrow, \(dateFormatter.string(from: self))"
+        } else if calendar.isDateInYesterday(self) {
+            return "Yesterday, \(dateFormatter.string(from: self))"
+        } else {
+            dateFormatter.dateFormat = "EEEE, dd MMM"
+            return dateFormatter.string(from: self)
+        }
+    }
+}
+
+extension NumberFormatter {
+    static var customDecimalFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 1
+        formatter.minimumFractionDigits = 0
+        return formatter
+    }
+
+    func string(from value: Double?) -> String {
+        return self.string(from: NSNumber(value: value ?? 0)) ?? "0"
+    }
 }
 
 extension View {
@@ -60,7 +90,7 @@ extension View {
     
     func barStyle(width: CGFloat) -> some View {
         self
-            .frame(width: width * 0.8, height: 65)
+            .frame(width: width * 0.8, height: 50)
             .foregroundColor(Color.black)
             .background(
                 RoundedRectangle(cornerRadius: 6)
@@ -81,10 +111,9 @@ extension View {
                     .stroke(Color.black, lineWidth: 0.5)
                     .background(Color.softerWhite)
                     .cornerRadius(6)
-                    .shadow(color: .gray, radius: 1, x: 0, y: 2)
             )
             .padding(.horizontal, 20)
-            .padding([.top, .bottom], 5)
+            .padding([.top, .bottom], 4)
     }
     
     func repastTrackBarStyle(width: CGFloat) -> some View {
@@ -100,7 +129,8 @@ extension View {
                     .shadow(color: .gray, radius: 1, x: 0, y: 2)
             )
             .padding(.horizontal, 20)
-            .padding([.top, .bottom], 10)
+            .padding(.top, 15)
+            .padding(.bottom, 10)
     }
     
     func servingSizeBarStyle(width: CGFloat) -> some View {
@@ -147,19 +177,5 @@ extension View {
     func formRowStyle() -> some View {
         self
             .listRowBackground(Color.softerWhite)
-    }
-}
-
-extension NumberFormatter {
-    static var customDecimalFormatter: NumberFormatter {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.maximumFractionDigits = 1
-        formatter.minimumFractionDigits = 0
-        return formatter
-    }
-
-    func string(from value: Double?) -> String {
-        return self.string(from: NSNumber(value: value ?? 0)) ?? "0"
     }
 }

@@ -23,19 +23,20 @@ struct MainView: View {
         _selectedDate = State(initialValue: adjustedDate)
         _mainViewModel = StateObject(wrappedValue: MainViewModel(moc: moc, date: adjustedDate))
     }
-
+    
     var body: some View {
         NavigationView {
             GeometryReader { geometry in
                 VStack {
-        
                     Color.softerWhite
                         .edgesIgnoringSafeArea(.top)
-                        .frame(height: geometry.size.height * 0.32)
+                        .frame(height: 180)
                         .overlay(
                             NutritionalSummaryView(contentViewModel: mainViewModel, bodyWidth: geometry.size.width)
                         )
-                                    
+                    
+                    Spacer()
+                    
                     HStack {
                         Button {
                             selectedDate = Calendar.current.date(byAdding: .day, value: -1, to: selectedDate)!
@@ -43,14 +44,20 @@ struct MainView: View {
                             Image(systemName: "lessthan")
                                 .foregroundStyle(Color.black)
                         }
-                        .frame(maxWidth: .infinity, alignment: .center)
+                        .frame(maxWidth: 100, alignment: .center)
                         
-                        DatePicker("", selection: $selectedDate, displayedComponents: .date)
-                            .scaleEffect(1.1)
-                            .clipped()
-                            .labelsHidden()
-                            .background(Color.softerWhite.opacity(0.05))
-                            .tint(Color.black)
+                        ZStack {
+                            Text(selectedDate.customFormatted())
+                                .frame(maxWidth: .infinity)
+                                .lineLimit(1)
+                            DatePicker("", selection: $selectedDate, displayedComponents: .date)
+                                .scaleEffect(1.1)
+                                .clipped()
+                                .labelsHidden()
+                                .opacity(0.011)
+                                .tint(Color.green)
+                        }
+                        .frame(maxWidth: .infinity)
                         
                         Button {
                             selectedDate = Calendar.current.date(byAdding: .day, value: 1, to: selectedDate)!
@@ -58,7 +65,7 @@ struct MainView: View {
                             Image(systemName: "greaterthan")
                                 .foregroundStyle(Color.black)
                         }
-                        .frame(maxWidth: .infinity, alignment: .center)
+                        .frame(maxWidth: 100, alignment: .center)
                     }
                     .frame(width: geometry.size.width)
                     .padding([.top, .bottom], 20)
@@ -66,9 +73,10 @@ struct MainView: View {
                     Spacer()
                     
                     VStack {
-                        RepastLinkView(moc: moc, repastType: "breakfast", calorieCount: mainViewModel.breakfastCalories, date: selectedDate, bodyWidth: geometry.size.width)
-                        RepastLinkView(moc: moc, repastType: "lunch", calorieCount: mainViewModel.lunchCalories, date: selectedDate, bodyWidth: geometry.size.width)
-                        RepastLinkView(moc: moc, repastType: "dinner", calorieCount: mainViewModel.dinnerCalories, date: selectedDate, bodyWidth: geometry.size.width)
+                        RepastLinkView(moc: moc, repastType: "Breakfast", calorieCount: mainViewModel.breakfastCalories, date: selectedDate, bodyWidth: geometry.size.width)
+                        RepastLinkView(moc: moc, repastType: "Lunch", calorieCount: mainViewModel.lunchCalories, date: selectedDate, bodyWidth: geometry.size.width)
+                        RepastLinkView(moc: moc, repastType: "Dinner", calorieCount: mainViewModel.dinnerCalories, date: selectedDate, bodyWidth: geometry.size.width)
+                        RepastLinkView(moc: moc, repastType: "Snacks", calorieCount: mainViewModel.snacksCalories, date: selectedDate, bodyWidth: geometry.size.width)
                     }
                     .id(selectedDate)
                     .transition(.customSlide)
@@ -76,29 +84,22 @@ struct MainView: View {
                     
                     Spacer()
                     
-                    VStack {
-                        HStack {
-                            NavigationLink {
-                                
-                            } label: {
-                                Text("Meals")
-                                    .font(.headline)
-                                    .mealsFoodStyle(width: geometry.size.width)
-                            }
-                            .padding(.top, 5)
-                            
-                            NavigationLink {
-                                FoodView(moc: moc)
-                            } label: {
-                                Text("Food")
-                                    .font(.headline)
-                                    .mealsFoodStyle(width: geometry.size.width)
-                            }
-                            .padding(.top, 5)
-                        }
-                    }
                     
-                    Spacer()
+                    HStack {
+                        Spacer()
+                        Spacer()
+                        NavigationLink {
+                            CustomFoodView(moc: moc)
+                        } label: {
+                            Text("Food")
+                                .font(.headline)
+                                .mealsFoodStyle(width: geometry.size.width)
+                        }
+                        .padding(.top, 5)
+                        .padding(.trailing, 40)
+                    }
+                    .padding(.bottom, 16)
+                    
                 }
                 .navigationTitle("bitemap")
                 .navigationBarTitleDisplayMode(.inline)
@@ -115,6 +116,7 @@ struct MainView: View {
                 }
             }
         }
+        .accentColor(.black)
     }
 }
 

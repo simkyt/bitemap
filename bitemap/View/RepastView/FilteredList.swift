@@ -25,6 +25,7 @@ struct FilteredList<T: NSManagedObject, Content: View>: View {
             Text("YOUR FOOD")
                 .font(.footnote)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top, 10)
                 .padding(.leading, 30)
             ForEach(fetchRequest, id: \.self) { object in
                 self.content(object)

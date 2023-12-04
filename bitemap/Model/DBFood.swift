@@ -1,41 +1,22 @@
 //
-//  Food.swift
+//  StandardFood.swift
 //  bitemap
 //
-//  Created by Simonas Kytra on 27/11/2023.
+//  Created by Simonas Kytra on 02/12/2023.
 //
 
 import Foundation
-import SwiftUI
 
-struct DBFood: Codable, StandardFood {
-    let brand: String?
-    let carbs: Double
-    let fat: Double
-    let id: String
-    let kcal: Double
-    let name, perserving: String
-    let protein: Double
-    let serving: String
-    let size: Double
-    let subcategoryID: Int
-
-    enum CodingKeys: String, CodingKey {
-        case brand, carbs, fat, id, kcal, name, perserving, protein, serving, size
-        case subcategoryID = "subcategory_id"
-    }
-    
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(brand, forKey: .brand)
-        try container.encode(carbs, forKey: .carbs)
-        try container.encode(fat, forKey: .fat)
-        try container.encode(kcal, forKey: .kcal)
-        try container.encode(name, forKey: .name)
-        try container.encode(perserving, forKey: .perserving)
-        try container.encode(protein, forKey: .protein)
-        try container.encode(serving, forKey: .serving)
-        try container.encode(size, forKey: .size)
-        try container.encode(subcategoryID, forKey: .subcategoryID)
-    }
+// to combine BMFood and FSFood
+protocol DBFood {
+    var id: String { get }
+    var brand: String? { get }
+    var carbs: Double { get }
+    var fat: Double { get }
+    var kcal: Double { get }
+    var name: String { get }
+    var perserving: String { get }
+    var protein: Double { get }
+    var serving: String { get }
+    var size: Double { get }
 }

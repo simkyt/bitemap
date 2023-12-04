@@ -15,6 +15,7 @@ struct bitemapApp: App {
         WindowGroup {
             MainView(moc: dataController.container.viewContext)
                 .environment(\.managedObjectContext, dataController.container.viewContext)
+//                .environment(\.font, .custom("Avenir", size: 16))
         }
     }
 }

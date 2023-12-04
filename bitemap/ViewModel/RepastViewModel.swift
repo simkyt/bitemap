@@ -11,8 +11,17 @@ import CoreData
 
 class RepastViewModel: ObservableObject {
     @Published var repast: Repast?
-    @Published var DBfoods = [DBFood]()
+    @Published var DBfoods = [BMFood]()
     @Published var FSfoods = [FSFood]()
+    @Published var combinedFoods = [DBFood]()
+    private var fetchingDebounceTimer: Timer?
+    
+    var hasFoodEntries: Bool {
+        if let foodEntries = repast?.foodEntryArray, !foodEntries.isEmpty {
+            return true
+        }
+        return false
+    }
     
     var moc: NSManagedObjectContext
     
@@ -20,20 +29,59 @@ class RepastViewModel: ObservableObject {
         self.moc = moc
     }
     
-    func fetchFoodsFromDatabase(searchText: String) {
-        NetworkManager.fetchFoodFromDatabase(food: searchText) { fetchedFoods in
-            DispatchQueue.main.async {
-                self.DBfoods = fetchedFoods
-                print(self.DBfoods)
+    func startSearch(searchText: String) {
+        let trimmedSearchText = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmedSearchText.isEmpty {
+            self.combinedFoods = []
+            return
+        }
+        
+        var foodsFromDatabase = [DBFood]()
+        var foodsFromFS = [DBFood]()
+
+        debounceFetching(searchText: searchText) {
+            let dispatchGroup = DispatchGroup()
+            
+            dispatchGroup.enter()
+            self.fetchFoodsFromDatabase(searchText: searchText) { fetchedFoods in
+                foodsFromDatabase = fetchedFoods
+                dispatchGroup.leave()
+            }
+
+            dispatchGroup.enter()
+            self.fetchFoodsFromFS(searchText: searchText) { fetchedFoods in
+                foodsFromFS = fetchedFoods
+                dispatchGroup.leave()
+            }
+            
+            dispatchGroup.notify(queue: .main) {
+                self.combinedFoods = foodsFromDatabase + foodsFromFS
             }
         }
     }
+    func debounceFetching(searchText: String, fetchingFunctions: @escaping () -> Void) {
+        fetchingDebounceTimer?.invalidate()
+        fetchingDebounceTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { _ in
+            fetchingFunctions()
+        }
+    }
     
-    func fetchFoodsFromFS(searchText: String) {
+    func fetchFoodsFromDatabase(searchText: String, completion: @escaping ([DBFood]) -> Void) {
+        NetworkManager.fetchFoodFromDatabase(food: searchText) { fetchedFoods in
+            DispatchQueue.main.async {
+                completion(fetchedFoods)
+            }
+        }
+    }
+
+    func fetchFoodsFromFS(searchText: String, completion: @escaping ([DBFood]) -> Void) {
         NetworkManager.fetchFoodFromFS(food: searchText) { fetchedFoods in
             DispatchQueue.main.async {
-                self.FSfoods = fetchedFoods.foods?.food?.filter { $0.size != 0 } ?? [FSFood]()
-                print(self.FSfoods)
+                if let fsFoods = fetchedFoods.foods?.food?.filter({ $0.size != 0 }) {
+                    completion(fsFoods)
+                } else {
+                    completion([])
+                }
             }
         }
     }
@@ -55,114 +103,77 @@ class RepastViewModel: ObservableObject {
         }
     }
     
-    func addDatabaseFood<T: StandardFood>(type: String, date: Date, food: T) {
-        let fetchRequest: NSFetchRequest<Food> = Food.fetchRequest()
-        
-        let predicate = NSPredicate(format: "name == %@ AND brand == %@ AND serving == %@ AND perserving == %@ AND carbs == %f AND fat == %@ AND kcal == %f AND protein == %f AND #size == %@",
-                                    food.name, food.brand ?? "", food.serving, food.perserving, food.carbs, NSNumber(value: food.fat), food.kcal, food.protein, NSNumber(value: food.size))
-        fetchRequest.predicate = predicate
-        
+    func createTemporaryFoodEntry(food: DBFood, type: String, date: Date) -> FoodEntry? {
         do {
-            let existingFoods = try moc.fetch(fetchRequest)
-            if existingFoods.isEmpty {
-                let newFood = Converter.convertToFood(moc: moc, food: food)
-                addFood(type: type, date: date, food: newFood)
-            } else {
-                addFood(type: type, date: date, food: existingFoods.first!)
-            }
+            let food = try fetchOrCreateFood(from: food)
+            let result = prepareFoodEntryAndRepast(type: type, date: date, food: food)
+            return result.foodEntry
         } catch {
-            print("Error fetching food: \(error)")
+            print("Error fetching or creating food: \(error)")
+            return nil
         }
     }
     
-//    func addDBFood(type: String, date: Date, dbFood: DBFood) {
-//        let fetchRequest: NSFetchRequest<Food> = Food.fetchRequest()
-//        
-//        let predicate = NSPredicate(format: "name == %@ AND brand == %@ AND serving == %@ AND perserving == %@ AND carbs == %f AND fat == %@ AND kcal == %f AND protein == %f AND #size == %@",
-//                                    dbFood.name, dbFood.brand ?? "", dbFood.serving, dbFood.perserving, dbFood.carbs, NSNumber(value: dbFood.fat), dbFood.kcal, dbFood.protein, NSNumber(value: dbFood.size))
-//        fetchRequest.predicate = predicate
-//        
-//        do {
-//            let existingFoods = try moc.fetch(fetchRequest)
-//            if existingFoods.isEmpty {
-//                let newFood = Converter.convertDBFoodToFood(moc: moc, dbFood)
-//                addFood(type: type, date: date, food: newFood)
-//            } else {
-//                addFood(type: type, date: date, food: existingFoods.first!)
-//            }
-//        } catch {
-//            print("Error fetching food: \(error)")
-//        }
-//    }
-//    
-//    func addFSFood(type: String, date: Date, fsFood: FSFood) {
-//        let fetchRequest: NSFetchRequest<Food> = Food.fetchRequest()
-//        
-//        let predicate = NSPredicate(format: "name == %@ AND brand == %@ AND serving == %@ AND perserving == %@ AND carbs == %f AND fat == %@ AND kcal == %f AND protein == %f AND #size == %@",
-//                                    fsFood.name, fsFood.brand ?? "", fsFood.serving, fsFood.perserving, fsFood.carbs, NSNumber(value: fsFood.fat), fsFood.kcal, fsFood.protein, NSNumber(value: fsFood.size))
-//        fetchRequest.predicate = predicate
-//        
-//        do {
-//            let existingFoods = try moc.fetch(fetchRequest)
-//            if existingFoods.isEmpty {
-//                let newFood = Converter.convertFSFoodToFood(moc: moc, fsFood)
-//                addFood(type: type, date: date, food: newFood)
-//            } else {
-//                addFood(type: type, date: date, food: existingFoods.first!)
-//            }
-//        } catch {
-//            print("Error fetching food: \(error)")
-//        }
-//    }
+    func fetchOrCreateFood<T: DBFood>(from food: T) throws -> Food {
+        let fetchRequest: NSFetchRequest<Food> = Food.fetchRequest()
+        let predicate = NSPredicate(format: "name == %@ AND brand == %@ AND serving == %@ AND perserving == %@ AND carbs == %f AND fat == %@ AND kcal == %f AND protein == %f AND #size == %@",
+                                    food.name, food.brand ?? "", food.serving, food.perserving, food.carbs, NSNumber(value: food.fat), food.kcal, food.protein, NSNumber(value: food.size))
+        fetchRequest.predicate = predicate
+
+        do {
+            let existingFoods = try moc.fetch(fetchRequest)
+            if existingFoods.isEmpty {
+                return FoodConverter.convertToFood(moc: moc, food: food)
+            } else {
+                return existingFoods.first!
+            }
+        } catch {
+            print("Error fetching food: \(error)")
+            throw error
+        }
+    }
+    
+    func prepareFoodEntryAndRepast(type: String, date: Date, food: Food) -> (foodEntry: FoodEntry, repast: Repast) {
+        let repast = fetchRepast(for: type, date: date) ?? Repast(context: moc)
+        repast.type = type
+        repast.date = date
+
+        let newFoodEntry = FoodEntry(context: moc)
+        newFoodEntry.id = UUID()
+        newFoodEntry.food = food
+        newFoodEntry.repast = repast
+        newFoodEntry.servingsize = 1
+        newFoodEntry.servingunit = "\(food.wrappedServing) (\(NumberFormatter.customDecimalFormatter.string(from: food.size)) \(food.wrappedPerServing))"
+        newFoodEntry.kcal = food.kcal
+        newFoodEntry.carbs = food.carbs
+        newFoodEntry.protein = food.protein
+        newFoodEntry.fat = food.fat
+        
+        // Update repast totals
+        repast.kcal += food.kcal
+        repast.carbs += food.carbs
+        repast.fat += food.fat
+        repast.protein += food.protein
+        repast.addToFoodentry(newFoodEntry)
+
+        return (newFoodEntry, repast)
+    }
+    
+    func addDatabaseFood<T: DBFood>(type: String, date: Date, food: T) {
+        do {
+            let newOrExistingFood = try fetchOrCreateFood(from: food)
+            addFood(type: type, date: date, food: newOrExistingFood)
+        } catch {
+            print("Error in addDatabaseFood: \(error)")
+        }
+    }
     
     func addFood(type: String, date: Date, food: Food) {
         do {
-            if let existingRepast = fetchRepast(for: type, date: date) {
-                let newFoodEntry = FoodEntry(context: moc)
-                newFoodEntry.id = UUID()
-                newFoodEntry.food = food
-                newFoodEntry.repast = existingRepast
-                newFoodEntry.servingsize = 1
-                newFoodEntry.servingunit = "\(food.wrappedServing) (\(NumberFormatter.customDecimalFormatter.string(from: food.size)) \(food.wrappedPerServing))"
-                newFoodEntry.kcal = food.kcal
-                newFoodEntry.carbs = food.carbs
-                newFoodEntry.protein = food.protein
-                newFoodEntry.fat = food.fat
-                existingRepast.addToFoodentry(newFoodEntry)
-                existingRepast.kcal += food.kcal
-                existingRepast.carbs += food.carbs
-                existingRepast.fat += food.fat
-                existingRepast.protein += food.protein
-                
-                try moc.save()
-                
-                repast = existingRepast
-            } else {
-                let repast = Repast(context: moc)
-                repast.type = type
-                repast.date = date
-
-                repast.kcal = food.kcal
-                repast.carbs = food.carbs
-                repast.fat = food.fat
-                repast.protein = food.protein
-
-                let newFoodEntry = FoodEntry(context: moc)
-                newFoodEntry.id = UUID()
-                newFoodEntry.food = food
-                newFoodEntry.repast = repast
-                newFoodEntry.servingsize = 1
-                newFoodEntry.servingunit = "\(food.wrappedServing) (\(NumberFormatter.customDecimalFormatter.string(from: food.size)) \(food.wrappedPerServing))"
-                newFoodEntry.kcal = food.kcal
-                newFoodEntry.carbs = food.carbs
-                newFoodEntry.protein = food.protein
-                newFoodEntry.fat = food.fat
-                repast.addToFoodentry(newFoodEntry)
-
-                try moc.save()
-                
-                self.repast = repast
-            }
+            let (_, repast) = prepareFoodEntryAndRepast(type: type, date: date, food: food)
+            
+            try moc.save()
+            self.repast = repast
         } catch {
             print("Error saving food to repast: \(error)")
         }
@@ -187,8 +198,11 @@ class RepastViewModel: ObservableObject {
             
             repast.removeFromFoodentry(foodEntryToDelete)
             
-            moc.delete(foodEntryToDelete)
+            if let quickTrack = foodEntryToDelete.quicktrack {
+                moc.delete(quickTrack)
+            }
             
+            moc.delete(foodEntryToDelete)
         }
         
         do {

@@ -27,6 +27,7 @@ extension FoodEntry {
         servingunit ?? "Unknown serving unit"
     }
     @NSManaged public var food: Food?
+    @NSManaged public var quicktrack: QuickTrack?
     @NSManaged public var repast: Repast?
 
 }

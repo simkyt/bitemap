@@ -9,7 +9,6 @@ import SwiftUI
 import CoreData
 
 struct RepastView: View {
-//    @Environment(\.managedObjectContext) var moc
     private var moc: NSManagedObjectContext
     @StateObject private var viewModel: RepastViewModel
     let type: String
@@ -18,6 +17,8 @@ struct RepastView: View {
     @FocusState private var isFocused: Bool
     @State private var search = ""
     @State private var searchEnabled = false
+    @State private var showAddScreen = false
+    @State private var showQuickTrack = false
     
     init(type: String, date: Date, moc: NSManagedObjectContext) {
         self.type = type
@@ -28,7 +29,7 @@ struct RepastView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            VStack {
+            VStack(spacing: 0) {
                 ZStack {
                     Color.softerWhite
                         .edgesIgnoringSafeArea(.top)
@@ -44,6 +45,7 @@ struct RepastView: View {
                             TextField("Food", text: $search, onEditingChanged: { changed in
                                 if changed {
                                     searchEnabled = true
+                                    search = ""
                                 }
                             })
                             .submitLabel(.search)
@@ -51,11 +53,8 @@ struct RepastView: View {
                             .onTapGesture {
                                 isFocused = true
                             }
-                            .onSubmit {
-                                viewModel.fetchFoodsFromFS(searchText: search)
-                            }
-                            .onChange(of: search) { _ in
-                                viewModel.fetchFoodsFromDatabase(searchText: search)
+                            .onChange(of: search) { newValue in
+                                viewModel.startSearch(searchText: newValue)
                             }
                         }
                         .foodSearchBarStyle(width: geometry.size.width)
@@ -65,18 +64,52 @@ struct RepastView: View {
                         
                         if searchEnabled {
                             Button(action: {
+                                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                                 searchEnabled = false
                                 search = ""
-                                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                             }) {
                                 Text("Cancel")
                                     .foregroundStyle(Color.black)
                                     .font(.subheadline)
                                     .padding(.trailing, 16)
                             }
+                        } else {
+                            Menu {
+                                Button {
+                                    self.showQuickTrack = true
+                                } label: {
+                                    HStack {
+                                        Text("Quick track")
+                                        
+                                        Image(systemName: "flame")
+                                            .foregroundStyle(.black)
+                                    }
+                                }
+                                Button {
+                                    self.showAddScreen = true
+                                } label: {
+                                    HStack {
+                                        Text("Create food")
+                                        
+                                        Image(systemName: "plus")
+                                            .foregroundStyle(.black)
+                                    }
+                                }
+                            } label: {
+                                Text("...")
+                                    .foregroundStyle(.black)
+                                    .bold()
+                            }
+                            .foregroundStyle(Color.black)
+                            .font(.title)
+                            .padding(.trailing, 26)
                         }
                     }
                 }
+                
+                Rectangle()
+                    .frame(height: 0.5)
+                    .foregroundColor(.gray)
                 
                 if searchEnabled {
                     SearchResultsView(search: $search,
@@ -86,68 +119,21 @@ struct RepastView: View {
                                       type: type,
                                       date: date)
                 } else {
-                    VStack {
-                        HStack {
-                            Text("Tracked")
-                                .font(.footnote)
-                            Spacer()
-                            Text("\(NumberFormatter.customDecimalFormatter.string(from: viewModel.repast?.kcal)) kcal")
-                                .bold()
-                        }
-                        HStack {
-                            VStack {
-                                Text("Carbs")
-                                    .font(.footnote)
-                                    .overlay(Rectangle().frame(height: 1.5).foregroundColor(.orange), alignment: .bottom)
-                                Text("\(NumberFormatter.customDecimalFormatter.string(from: viewModel.repast?.carbs)) g")
-                                    .bold()
-                            }
-                            Spacer()
-                            VStack {
-                                Text("Protein")
-                                    .font(.footnote)
-                                    .overlay(Rectangle().frame(height: 1.5).foregroundColor(.green), alignment: .bottom)
-                                Text("\(NumberFormatter.customDecimalFormatter.string(from: viewModel.repast?.protein)) g")
-                                    .bold()
-                            }
-                            Spacer()
-                            VStack {
-                                Text("Fat")
-                                    .font(.footnote)
-                                    .overlay(Rectangle().frame(height: 1.5).foregroundColor(.pink), alignment: .bottom)
-                                Text("\(NumberFormatter.customDecimalFormatter.string(from: viewModel.repast?.fat)) g")
-                                    .bold()
-                            }
-                        }
-                        .padding(.top, 4)
-                    }
-                    .repastTrackBarStyle(width: geometry.size.width)
+                    NutritionTrackView(repast: viewModel.repast, geometry: geometry)
                     
-                    if let foodEntries = viewModel.repast?.foodEntryArray, foodEntries.count > 0 {
+                    if viewModel.hasFoodEntries {
                         Text("YOU HAVE TRACKED")
                             .font(.footnote)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.leading, 30)
                         List() {
-                            ForEach(foodEntries) { foodEntry in
-                                if let food = foodEntry.food {
-                                    NavigationLink(destination: TrackedFoodDetailView(moc: moc, foodEntry: foodEntry)) {
-                                        VStack(alignment: .leading) {
-                                            Text(food.wrappedName)
-                                                .font(.headline)
-                                                .padding(.bottom, 0.5)
-                                            Text("\(NumberFormatter.customDecimalFormatter.string(from: foodEntry.kcal)) kcal")
-                                                .font(.subheadline)
-                                            Text("\(NumberFormatter.customDecimalFormatter.string(from: foodEntry.servingsize)) \(foodEntry.wrappedServingUnit)")
-                                                .font(.subheadline)
-                                        }
-                                    }
-                                    .listRowBackground(Color.softerWhite)
-                                }
+                            ForEach(viewModel.repast!.foodEntryArray) { foodEntry in
+                                FoodRowView(foodEntry: foodEntry, moc: moc, search: $search, searchEnabled: $searchEnabled)
+                                QuickTrackRowView(foodEntry: foodEntry)
                             }
                             .onDelete { indexSet in
                                 viewModel.removeFoodEntry(at: indexSet)
-                            }                  
+                            }
                         }
                         .scrollContentBackground(.hidden)
                         .padding(.horizontal, 20)
@@ -170,6 +156,15 @@ struct RepastView: View {
             )
             .onAppear {
                 viewModel.loadRepast(for: type, date: date)
+            }
+            .sheet(isPresented: $showAddScreen) {
+                FoodDetailView(moc: moc)
+            }
+            .sheet(isPresented: $showQuickTrack) {
+                QuickTrackView(moc: moc, type: type, date: date)
+                    .onDisappear {
+                        viewModel.loadRepast(for: type, date: date)
+                    }
             }
         }
     }
