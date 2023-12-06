@@ -27,7 +27,6 @@
 		1E59584E2B1E21B600499F5D /* QuickTrack+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E59584C2B1E21B600499F5D /* QuickTrack+CoreDataClass.swift */; };
 		1E59584F2B1E21B600499F5D /* QuickTrack+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E59584D2B1E21B600499F5D /* QuickTrack+CoreDataProperties.swift */; };
 		1E5958512B1E376600499F5D /* QuickTrackRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5958502B1E376600499F5D /* QuickTrackRowView.swift */; };
-		1E5958532B1E37A300499F5D /* FoodRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5958522B1E37A300499F5D /* FoodRowView.swift */; };
 		1E59585F2B1E5DEE00499F5D /* NutritionBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E59585E2B1E5DEE00499F5D /* NutritionBarView.swift */; };
 		1E729A4F2B1365C1001C05A7 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E729A4E2B1365C1001C05A7 /* MainViewModel.swift */; };
 		1E79A3CB2AB374A600FCF193 /* FoodEntry+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E79A3C92AB374A600FCF193 /* FoodEntry+CoreDataClass.swift */; };
@@ -74,7 +73,6 @@
 		1E59584C2B1E21B600499F5D /* QuickTrack+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QuickTrack+CoreDataClass.swift"; sourceTree = "<group>"; };
 		1E59584D2B1E21B600499F5D /* QuickTrack+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QuickTrack+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1E5958502B1E376600499F5D /* QuickTrackRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickTrackRowView.swift; sourceTree = "<group>"; };
-		1E5958522B1E37A300499F5D /* FoodRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodRowView.swift; sourceTree = "<group>"; };
 		1E59585E2B1E5DEE00499F5D /* NutritionBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NutritionBarView.swift; sourceTree = "<group>"; };
 		1E729A4E2B1365C1001C05A7 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		1E79A3C92AB374A600FCF193 /* FoodEntry+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodEntry+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -237,7 +235,6 @@
 				1EAD37572B168A1D00B7C649 /* SearchResultsView.swift */,
 				1EB063732AADE4B900139F48 /* FilteredList.swift */,
 				1E59585E2B1E5DEE00499F5D /* NutritionBarView.swift */,
-				1E5958522B1E37A300499F5D /* FoodRowView.swift */,
 				1E5958502B1E376600499F5D /* QuickTrackRowView.swift */,
 				1E5958322B175D7500499F5D /* TrackedFoodDetailView.swift */,
 				1E5958482B1E1DF400499F5D /* QuickTrackView.swift */,
@@ -356,7 +353,6 @@
 				1E59583D2B1B4B7700499F5D /* KeyboardHelper.swift in Sources */,
 				1EB063722AAC8BED00139F48 /* RepastViewModel.swift in Sources */,
 				1E5958472B1CE5C800499F5D /* APITokenResponse.swift in Sources */,
-				1E5958532B1E37A300499F5D /* FoodRowView.swift in Sources */,
 				1E885EF22A9E210700E69D74 /* ViewCustomization.swift in Sources */,
 				1E59584E2B1E21B600499F5D /* QuickTrack+CoreDataClass.swift in Sources */,
 				1E59584B2B1E1E1A00499F5D /* QuickTrackViewModel.swift in Sources */,
@@ -499,6 +495,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -528,6 +525,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

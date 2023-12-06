@@ -128,7 +128,25 @@ struct RepastView: View {
                             .padding(.leading, 30)
                         List() {
                             ForEach(viewModel.repast!.foodEntryArray) { foodEntry in
-                                FoodRowView(foodEntry: foodEntry, moc: moc, search: $search, searchEnabled: $searchEnabled)
+                                if let food = foodEntry.food {
+                                    NavigationLink(destination: TrackedFoodDetailView(moc: moc, foodEntry: foodEntry, trackingType: .update, search: $search, searchEnabled: $searchEnabled)) {
+                                        VStack(alignment: .leading) {
+                                            Text(food.wrappedName)
+                                                .font(.headline)
+                                                .padding(.bottom, 0.5)
+                                            Text("\(NumberFormatter.customDecimalFormatter.string(from: foodEntry.kcal)) kcal")
+                                                .font(.subheadline)
+                                            HStack {
+                                                Image(systemName: "rectangle.and.pencil.and.ellipsis")
+                                                    .foregroundStyle(.black)
+                                                Text("\(NumberFormatter.customDecimalFormatter.string(from: foodEntry.servingsize)) \(foodEntry.wrappedServingUnit)")
+                                                    .font(.subheadline)
+                                            }
+                                        }
+                                    }
+                                    .listRowBackground(Color.softerWhite)
+                                }
+                                
                                 QuickTrackRowView(foodEntry: foodEntry)
                             }
                             .onDelete { indexSet in
