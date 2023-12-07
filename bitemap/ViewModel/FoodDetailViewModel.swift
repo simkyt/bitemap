@@ -10,13 +10,13 @@ import SwiftUI
 import CoreData
 
 class FoodDetailViewModel: ObservableObject {
-    var moc: NSManagedObjectContext
+    private var moc: NSManagedObjectContext
 
     @Published var name = ""
     @Published var brand = ""
     
-    var initialSubcategoryID = 0
-    var initialCategoryID = 0
+    private var initialSubcategoryID = 0
+    private var initialCategoryID = 0
     @Published var category = ""
     @Published var categoryID = 0
     @Published var subcategoryID = 0
@@ -33,14 +33,15 @@ class FoodDetailViewModel: ObservableObject {
     @Published var carbs = ""
     @Published var fat = ""
     
-    @Published var categories = [DBCategory]()
-    @Published var subcategories = [DBSubcategory]()
+    @Published private(set) var categories = [DBCategory]()
+    @Published private(set) var subcategories = [DBSubcategory]()
     
     enum Mode {
         case add
         case edit(Food)
     }
-    var mode: Mode
+    
+    private var mode: Mode
     
     var buttonTitle: String {
         switch mode {

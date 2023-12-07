@@ -11,8 +11,6 @@ import CoreData
 
 class RepastViewModel: ObservableObject {
     @Published var repast: Repast?
-    @Published var DBfoods = [BMFood]()
-    @Published var FSfoods = [FSFood]()
     @Published var combinedFoods = [DBFood]()
     private var fetchingDebounceTimer: Timer?
     

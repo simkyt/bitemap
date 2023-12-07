@@ -119,7 +119,7 @@ struct RepastView: View {
                                       type: type,
                                       date: date)
                 } else {
-                    NutritionTrackView(repast: viewModel.repast, geometry: geometry)
+                    NutritionBarView(repast: viewModel.repast, geometry: geometry)
                     
                     if viewModel.hasFoodEntries {
                         Text("YOU HAVE TRACKED")
@@ -146,7 +146,6 @@ struct RepastView: View {
                                     }
                                     .listRowBackground(Color.softerWhite)
                                 }
-                                
                                 QuickTrackRowView(foodEntry: foodEntry)
                             }
                             .onDelete { indexSet in

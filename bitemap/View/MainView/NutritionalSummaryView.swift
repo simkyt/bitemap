@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct NutritionalSummaryView: View {
-    @ObservedObject var contentViewModel: MainViewModel
-    var bodyWidth: CGFloat
+    @ObservedObject private var contentViewModel: MainViewModel
+    private var bodyWidth: CGFloat
 
     init(contentViewModel: MainViewModel, bodyWidth: CGFloat) {
         self.contentViewModel = contentViewModel

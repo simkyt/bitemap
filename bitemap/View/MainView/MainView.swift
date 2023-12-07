@@ -10,8 +10,8 @@ import CoreData
 
 struct MainView: View {
     private var moc: NSManagedObjectContext
-    @State var selectedDate: Date
-    @StateObject var mainViewModel: MainViewModel
+    @State private var selectedDate: Date
+    @StateObject private var mainViewModel: MainViewModel
     
     init(moc: NSManagedObjectContext) {
         let now = Date()

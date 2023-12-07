@@ -9,11 +9,11 @@ import SwiftUI
 import CoreData
 
 struct RepastLinkView: View {
-    let repastType: String
-    let calorieCount: Double
-    let date: Date
+    private let repastType: String
+    private let calorieCount: Double
+    private let date: Date
     private var moc: NSManagedObjectContext
-    var bodyWidth: CGFloat
+    private var bodyWidth: CGFloat
 
     init(moc: NSManagedObjectContext, repastType: String, calorieCount: Double, date: Date, bodyWidth: CGFloat) {
         self.moc = moc

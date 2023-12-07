@@ -15,16 +15,16 @@ enum TrackingType {
 }
 
 struct TrackedFoodDetailView: View {
-    var moc: NSManagedObjectContext
+    private var moc: NSManagedObjectContext
     @StateObject private var viewModel: TrackedFoodDetailViewModel
     @Environment(\.presentationMode) var presentationMode
     
     @Binding var search: String
     @Binding var searchEnabled: Bool
     
-    var trackingType: TrackingType
+    private var trackingType: TrackingType
     @FocusState private var isFocused: Bool
-    let maxLength = 4
+    private let maxLength = 4
     
     init(moc: NSManagedObjectContext, foodEntry: FoodEntry, trackingType: TrackingType, search: Binding<String>, searchEnabled: Binding<Bool>) {
         self.moc = moc

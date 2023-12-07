@@ -10,10 +10,10 @@ import SwiftUI
 import CoreData
 
 class QuickTrackViewModel: ObservableObject {
-    var moc: NSManagedObjectContext
+    private var moc: NSManagedObjectContext
     @Published var repast: Repast?
-    var type: String
-    var date: Date
+    private var type: String
+    private var date: Date
     
     @Published var name = ""
     

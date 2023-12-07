@@ -10,7 +10,7 @@ import SwiftUI
 import CoreData
 
 class CustomFoodViewModel: ObservableObject {
-    var moc: NSManagedObjectContext
+    private var moc: NSManagedObjectContext
 
     @Published var foods: [Food] = []
     

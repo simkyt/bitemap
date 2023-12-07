@@ -10,7 +10,7 @@ import SwiftUI
 import CoreData
 
 class TrackedFoodDetailViewModel: ObservableObject {
-    var moc: NSManagedObjectContext
+    private var moc: NSManagedObjectContext
     @Published var servingSizeText: String = ""
     @Published var temporaryServingUnit: String = ""
     @Published var temporaryKcal: Double = 0
@@ -27,9 +27,9 @@ class TrackedFoodDetailViewModel: ObservableObject {
         return true
     }
     
-    let formatter = NumberFormatter()
+    private let formatter = NumberFormatter()
 
-    var foodEntry: FoodEntry
+    private(set) var foodEntry: FoodEntry
 
     init(moc: NSManagedObjectContext, foodEntry: FoodEntry) {
         self.moc = moc

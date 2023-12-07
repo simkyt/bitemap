@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct NutritionTrackView: View {
+struct NutritionBarView: View {
     let repast: Repast?
     let geometry: GeometryProxy
 
